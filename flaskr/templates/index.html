@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Movie Recommender System</title>
+    <title>Book Recommender System</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
@@ -25,7 +25,7 @@
             <nav :class="['navbar', 'is-active']" role="navigation" aria-label="main navigation">
                 <div class="navbar-brand">
                     <a class="navbar-item" href="/">
-                        <span class="is-size-3">Movies Recommender System</span>
+                        <span class="is-size-3">Books Recommender System</span>
                     </a>
 
                     <a role="button" :class="['navbar-burger', isActivityNavBar ? 'is-active' : '']" aria-label="menu"
@@ -44,11 +44,11 @@
                         <div class="navbar-item">
                             <div class="buttons">
                                 <button class="button is-danger" @click="cleanAll">
-                                    <strong>Clan All</strong>
+                                    <strong>Clean All</strong>
                                 </button>
 
                                 <button class="button is-link" @click="showGenres = true">
-                                    <strong>Genres</strong>
+                                    <strong>BookType</strong>
                                 </button>
                             </div>
                         </div>
@@ -67,12 +67,12 @@
                     <p class="mb-3">{{ recommendations_message }}</p>
 
                     <div class="columns is-mobile is-multiline">
-                        {% for movie in recommendations %}
+                        {% for book in recommendations %}
                         <div class="column is-2-fullhd is-2-desktop is-2-tablet is-6-mobile">
                             <div class="card">
                                 <div class="card-image">
                                     <figure class="image is-3by4">
-                                        <img src="{{ movie['cover_url'] }}"
+                                        <img src="{{ book['image_url'] }}"
                                              onerror="this.src='https://placehold.co/480x640?text=No+Cover';"
                                              alt="">
                                     </figure>
@@ -80,16 +80,16 @@
                                 <div class="card-content p-2">
                                     <div class="media">
                                         <div class="media-content">
-                                            <p style="font-size: 0.8rem; font-weight: bold">{{ movie['title']
+                                            <p style="font-size: 0.8rem; font-weight: bold">{{ book['title']
                                                 }}</p>
-                                            <p style="font-size: 0.8rem">{{ movie['release_date'] }}</p>
+                                            <p style="font-size: 0.8rem">{{ book['release_date'] }}</p>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="card-footer p-2">
-                                    <button class="button is-small" @click="updateLike({{movie['movieId']}})">
-                                        <span :class="['fa fa-heart', inLikes({{movie['movieId']}}) ? 'checked': '']" > Like</span>
+                                    <button class="button is-small" @click="updateLike({{book['book_id']}})">
+                                        <span :class="['fa fa-heart', inLikes({{book['book_id']}}) ? 'checked': '']" > Like</span>
                                     </button>
                                 </div>
                             </div>
@@ -188,9 +188,9 @@
                 <div class="modal-card-body">
                     <p class="mb-3">Multiple answers are possible.</p>
                     {% for gener in genres %}
-                    <button :class="['button m-2', inGenres({{gener['id']}}) ? 'is-link' : '' ]" value="{{gener['id']}}"
-                            @click="updateGenre({{gener['id']}})">
-                        {{gener['name']}}
+                    <button :class="['button m-2', inGenres({{gener['book_id']}}) ? 'is-link' : '' ]" value="{{gener['book_id']}}"
+                            @click="updateGenre({{gener['book_id']}})">
+                        {{gener['format']}}
                     </button>
                     {% endfor %}
                 </div>
@@ -209,29 +209,29 @@
                 </header>
                 <div class="modal-card-body">
                     <div class="columns is-mobile is-multiline">
-                        {% for movie in default_genres_movies %}
+                        {% for book in default_bookings %}
                         <div class="column is-3-fullhd is-3-desktop is-3-tablet is-6-mobile">
                             <div class="card">
                                 <div class="card-image">
                                     <figure class="image is-3by4">
-                                        <img src="{{ movie['cover_url'] }}"
+                                        <img src="{{ book['image_url'] }}"
                                              onerror="this.src='https://placehold.co/480x640?text=No+Cover';" alt="">
                                     </figure>
                                 </div>
                                 <div class="card-content p-2">
                                     <div class="media">
                                         <div class="media-content">
-                                            <p style="font-size: 0.8rem; font-weight: bold">{{ movie['title']
+                                            <p style="font-size: 0.8rem; font-weight: bold">{{ book['title']
                                                 }}</p>
-                                            <p style="font-size: 0.8rem">{{ movie['release_date'] }}</p>
+                                            <p style="font-size: 0.8rem">{{ book['release_date'] }}</p>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="card-footer p-2">
                                     <template v-for="rate in [1, 2, 3, 4, 5]">
-                                        <span :class="['fa fa-star px-1 star', getRate({{movie['movieId']}})[1] >= rate ? 'checked': '']"
-                                              @click="updateRate({{movie['movieId']}}, rate)"></span>
+                                        <span :class="['fa fa-star px-1 star', getRate({{book['book_id']}})[1] >= rate ? 'checked': '']"
+                                              @click="updateRate({{book['book_id']}}, rate)"></span>
                                     </template>
                                 </div>
                             </div>
@@ -246,22 +246,6 @@
                 </footer>
             </div>
         </div>
-
-        <footer class="footer mt-6">
-            <div class="container is-max-widescreen">
-                <div class="content has-text-centered">
-                    <p>
-                        Copyright © 2023 <a href="https://hci.comp.hkbu.edu.hk" target="_blank"><strong>PI Lab</strong></a>. All Rights Reserved.
-                    </p>
-                    <a href="https://www.comp.hkbu.edu.hk" target="_blank"><img src="/static/img/comp-logo.png"
-                                                                                alt="logo"
-                                                                                style="height: 30px; margin-right: 20px"></a>
-                    <a href="https://hkbu.edu.hk" target="_blank"><img src="/static/img/bu-logo.png" alt="logo"
-                                                                       style="height: 30px;"></a>
-
-                </div>
-            </div>
-        </footer>
     </template>
 </div>
 
@@ -332,10 +316,10 @@
                 return [-1, -1]
             }
 
-            function updateRate(movieId, rate) {
-                let record = '611' + '|' + movieId + '|' + rate + '|' + '0' //  total 610 users, so the new user id is 944
+            function updateRate(bookId, rate) {
+                let record = '611' + '|' + bookId + '|' + rate + '|' + '0' //  total 610 users, so the new user id is 944
 
-                const index = getRate(movieId)[0];
+                const index = getRate(bookId)[0];
                 if (index > -1) {
                     userRates.value[index] = record;
                 } else {
@@ -347,21 +331,21 @@
             // ==== Movie Like Operation ====
             const userLikes = ref({{user_likes | tojson}}) // If this place shows error, please check the format: ref({{user_likes | tojson}})
 
-            function updateLike(_movieId) {
-                let movieId = _movieId.toString()
-                const index = userLikes.value.indexOf(movieId);
+            function updateLike(_bookId) {
+                let book_id = _bookId.toString()
+                const index = userLikes.value.indexOf(book_id);
                 if (index > -1) {
                     userLikes.value.splice(index, 1);
                 } else {
-                    userLikes.value.push(movieId);
+                    userLikes.value.push(book_id);
                 }
 
                 document.cookie = "user_likes=" + userLikes.value;
 
                 reloadPage();
             }
-            function inLikes(movieId) {
-                return userLikes.value.includes(movieId.toString())
+            function inLikes(bookId) {
+                return userLikes.value.includes(bookId.toString())
             }
 
 
